@@ -51,7 +51,7 @@ class PermisosActivity : AppCompatActivity() {
                 //si solicita por segunda vez los permisos, daremos una explicación más
                 //detallada
                 shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CALL_LOG)->{
-                   mostrarDialogo()
+                   explicarPermisos()
                 }
                 //es la primera vez que se solicitan los permisos
                 else-> solicitudPermisosLauncher.launch(Manifest.permission.WRITE_CALL_LOG)
@@ -70,7 +70,7 @@ class PermisosActivity : AppCompatActivity() {
         ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALL_LOG) == PackageManager.PERMISSION_GRANTED
 
     //Solicitud educada de los permisos
-    fun mostrarDialogo(){
+    fun explicarPermisos(){
         AlertDialog.Builder(this)
             .setTitle(android.R.string.dialog_alert_title)
             //recuerda: todo el texto en string.xml
