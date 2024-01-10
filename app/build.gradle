@@ -5,7 +5,7 @@ plugins {
 
 android {
     namespace 'net.iessochoa.joseantoniolopez.intents_permisos'
-    compileSdk 33
+    compileSdk 34
 
     defaultConfig {
         applicationId "net.iessochoa.joseantoniolopez.intents_permisos"

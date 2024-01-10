@@ -11,6 +11,7 @@ import net.iessochoa.joseantoniolopez.intents_permisos.databinding.ActivityPermi
 import android.Manifest
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.appcompat.app.AlertDialog
 
 class PermisosActivity : AppCompatActivity() {
     private lateinit var binding: ActivityPermisosBinding
@@ -35,7 +36,7 @@ class PermisosActivity : AppCompatActivity() {
         binding = ActivityPermisosBinding.inflate(layoutInflater)
         setContentView(binding.root)
         binding.btnBorrarLlamadas.setOnClickListener {
-           borrarLlamada()
+            borrarLlamada()
             //2-Comprobamos los permidos antes de borrar la llamada
             /*if(permisosAceptados())
                 borrarLlamada()*/
@@ -47,10 +48,12 @@ class PermisosActivity : AppCompatActivity() {
             //5-Solicitud educada de los permisos
             /*when{
                 permisosAceptados()-> borrarLlamada()
-                *//*shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CALL_LOG)->{
-                    Snackbar.make(binding.lytPrincipal, "Es necesario el permiso de \"administrar llamadas\" para  borrar llamadas del registro. Tiene que aceptar este permiso para esta funcionalidad",
-                        Snackbar.LENGTH_LONG).show()
-                }*//*
+                //si solicita por segunda vez los permisos, daremos una explicación más
+                //detallada
+                shouldShowRequestPermissionRationale(Manifest.permission.WRITE_CALL_LOG)->{
+                   mostrarDialogo()
+                }
+                //es la primera vez que se solicitan los permisos
                 else-> solicitudPermisosLauncher.launch(Manifest.permission.WRITE_CALL_LOG)
             }*/
         }
@@ -65,4 +68,27 @@ class PermisosActivity : AppCompatActivity() {
     //1-Permite comprobar si tenemos los permisos asignados
     fun permisosAceptados()=
         ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_CALL_LOG) == PackageManager.PERMISSION_GRANTED
+
+    //Solicitud educada de los permisos
+    fun mostrarDialogo(){
+        AlertDialog.Builder(this)
+            .setTitle(android.R.string.dialog_alert_title)
+            //recuerda: todo el texto en string.xml
+            .setMessage("Es necesario el permiso de \"administrar llamadas\" para  borrar llamadas del registro. Tiene que aceptar este permiso para esta funcionalidad")
+            //acción si pulsa si
+            .setPositiveButton(android.R.string.ok) { v, _ ->
+                solicitudPermisosLauncher.launch(Manifest.permission.WRITE_CALL_LOG)
+                //cerramos el dialogo
+                v.dismiss()
+            }
+            //accion si pulsa no
+            .setNegativeButton(android.R.string.cancel) { v, _ ->
+                Snackbar.make(binding.lytPrincipal, "No se puede realizar la tarea sin los permisos",
+                    Snackbar.LENGTH_SHORT).show()
+
+                v.dismiss() }
+            .setCancelable(false)
+            .create()
+            .show()
+    }
 }
